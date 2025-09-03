@@ -1,0 +1,32 @@
+{
+  "name": "hitomi-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "tsc && node dist/src/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gandum2077/Hitomi-Parser.git"
+  },
+  "keywords": [],
+  "author": "Gandum2077",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Gandum2077/Hitomi-Parser/issues"
+  },
+  "homepage": "https://github.com/Gandum2077/Hitomi-Parser#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "url-parse": "^1.5.10"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/jquery": "^3.5.32",
+    "@types/url-parse": "^1.4.11",
+    "browserify": "^17.0.0",
+    "jsbox-types": "^1.0.44"
+  }
+}
