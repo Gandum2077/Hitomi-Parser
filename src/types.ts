@@ -113,8 +113,15 @@ export type HMState = {
   area: "all" | "artist" | "character" | "group" | "series" | "tag" | "type";
   tag: string; // 默认"index"
   language: string; // 默认"all"
-  orderby: "date" | "popular";
-  orderbykey: "added" | "published" | "today" | "week" | "month" | "year";
+  orderby: "date";
+  orderbykey: "added" | "published";
+  orderbydirection: "desc" | "asc" | "random";
+} | {
+  area: "all" | "artist" | "character" | "group" | "series" | "tag" | "type";
+  tag: string; // 默认"index"
+  language: string; // 默认"all"
+  orderby: "popular";
+  orderbykey: "today" | "week" | "month" | "year";
   orderbydirection: "desc" | "asc" | "random";
 };
 
@@ -122,7 +129,12 @@ export type HMNamespace = "artist" | "character" | "female" | "group" | "languag
 
 export type HMSearchOptions = {
   term: string;
-  orderby: "date" | "popular";
-  orderbykey: "added" | "published" | "today" | "week" | "month" | "year";
+  orderby: "date";
+  orderbykey: "added" | "published";
+  orderbydirection: "desc" | "asc" | "random";
+} | {
+  term: string;
+  orderby: "popular";
+  orderbykey: "today" | "week" | "month" | "year";
   orderbydirection: "desc" | "asc" | "random";
 };

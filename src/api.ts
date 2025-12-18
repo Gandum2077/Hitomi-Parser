@@ -73,7 +73,7 @@ export class HMAPIHandler {
    * 解析搜索查询字符串，将其拆分为正向、反向和或搜索标签。
    * @param query 搜索字符串
    * @returns 解析后的标签对象，包括 positive_terms、negative_terms、or_terms
-   * @throws 当标签格式不合法时抛出异常
+   * @throws {HMInvalidQueryError} 当标签格式不合法时抛出此错误
    */
   parseQuery(query: string): ParsedTerms {
     const positive_terms: { namespace?: HMNamespace; value: string }[] = [];
@@ -140,6 +140,7 @@ export class HMAPIHandler {
    * 判断给定的搜索词是否为单一标签（带有命名空间的正向标签）。
    * @param term 搜索词
    * @returns 如果是单一标签返回 true，否则返回 false
+   * @throws {HMInvalidQueryError} 当标签格式不合法时抛出此错误
    */
   isSingleTag(term: string) {
     const parsed = this.parseQuery(term);
@@ -180,36 +181,68 @@ export class HMAPIHandler {
   async multiTagSearch(options: HMSearchOptions) {
     const getPromise = (n: { namespace?: HMNamespace; value: string }) => {
       if (!n.value) {
-        const state: HMState = {
-          area: "all",
-          tag: "index",
-          language: "all",
-          orderby: options.orderby,
-          orderbykey: options.orderbykey,
-          orderbydirection: options.orderbydirection,
-        };
+        const state: HMState =
+          options.orderby === "date"
+            ? {
+                area: "all",
+                tag: "index",
+                language: "all",
+                orderby: options.orderby,
+                orderbykey: options.orderbykey,
+                orderbydirection: options.orderbydirection,
+              }
+            : {
+                area: "all",
+                tag: "index",
+                language: "all",
+                orderby: options.orderby,
+                orderbykey: options.orderbykey,
+                orderbydirection: options.orderbydirection,
+              };
         return get_galleryids_from_state(state);
       } else if (!n.namespace) {
         return get_galleryids_for_query_without_namespace(n.value);
       } else if (n.namespace === "language") {
-        const state: HMState = {
-          area: "all",
-          tag: "index",
-          language: n.value,
-          orderby: options.orderby,
-          orderbykey: options.orderbykey,
-          orderbydirection: options.orderbydirection,
-        };
+        const state: HMState =
+          options.orderby === "date"
+            ? {
+                area: "all",
+                tag: "index",
+                language: n.value,
+                orderby: options.orderby,
+                orderbykey: options.orderbykey,
+                orderbydirection: options.orderbydirection,
+              }
+            : {
+                area: "all",
+                tag: "index",
+                language: n.value,
+                orderby: options.orderby,
+                orderbykey: options.orderbykey,
+                orderbydirection: options.orderbydirection,
+              };
         return get_galleryids_from_state(state);
       } else {
-        const state: HMState = {
-          area: n.namespace === "female" || n.namespace === "male" ? "tag" : n.namespace,
-          tag: n.namespace === "female" ? "female:" + n.value : n.namespace === "male" ? "male:" + n.value : n.value,
-          language: "all",
-          orderby: options.orderby,
-          orderbykey: options.orderbykey,
-          orderbydirection: options.orderbydirection,
-        };
+        const state: HMState =
+          options.orderby === "date"
+            ? {
+                area: n.namespace === "female" || n.namespace === "male" ? "tag" : n.namespace,
+                tag:
+                  n.namespace === "female" ? "female:" + n.value : n.namespace === "male" ? "male:" + n.value : n.value,
+                language: "all",
+                orderby: options.orderby,
+                orderbykey: options.orderbykey,
+                orderbydirection: options.orderbydirection,
+              }
+            : {
+                area: n.namespace === "female" || n.namespace === "male" ? "tag" : n.namespace,
+                tag:
+                  n.namespace === "female" ? "female:" + n.value : n.namespace === "male" ? "male:" + n.value : n.value,
+                language: "all",
+                orderby: options.orderby,
+                orderbykey: options.orderbykey,
+                orderbydirection: options.orderbydirection,
+              };
         return get_galleryids_from_state(state);
       }
     };
@@ -256,14 +289,24 @@ export class HMAPIHandler {
   > {
     const parsed = this.parseQuery(options.term);
     if (!options.term.trim() && options.orderbydirection === "desc") {
-      const state: HMState = {
-        area: "all",
-        tag: "index",
-        language: "all",
-        orderby: options.orderby,
-        orderbykey: options.orderbykey,
-        orderbydirection: options.orderbydirection,
-      };
+      const state: HMState =
+        options.orderby === "date"
+          ? {
+              area: "all",
+              tag: "index",
+              language: "all",
+              orderby: options.orderby,
+              orderbykey: options.orderbykey,
+              orderbydirection: options.orderbydirection,
+            }
+          : {
+              area: "all",
+              tag: "index",
+              language: "all",
+              orderby: options.orderby,
+              orderbykey: options.orderbykey,
+              orderbydirection: options.orderbydirection,
+            };
       const { galleryids, count } = await this.getSingleTagSearchPage({ state, page: 0 });
       return {
         type: "single",
@@ -278,14 +321,24 @@ export class HMAPIHandler {
       parsed.positive_terms[0].namespace &&
       options.orderbydirection === "desc"
     ) {
-      const state: HMState = {
-        area: "all",
-        tag: "index",
-        language: "all",
-        orderby: options.orderby,
-        orderbykey: options.orderbykey,
-        orderbydirection: options.orderbydirection,
-      };
+      const state: HMState =
+        options.orderby === "date"
+          ? {
+              area: "all",
+              tag: "index",
+              language: "all",
+              orderby: options.orderby,
+              orderbykey: options.orderbykey,
+              orderbydirection: options.orderbydirection,
+            }
+          : {
+              area: "all",
+              tag: "index",
+              language: "all",
+              orderby: options.orderby,
+              orderbykey: options.orderbykey,
+              orderbydirection: options.orderbydirection,
+            };
       const n = parsed.positive_terms[0];
       if (!n.namespace) throw new HMInvalidQueryError("no namespace");
       if (n.namespace === "language") {
