@@ -138,7 +138,7 @@ class HMAPIHandler {
     }
     /**
      * 获取单一标签的搜索结果分页。
-     * @param params 包含 state（搜索状态）和 page（页码）
+     * @param params 包含 state（搜索状态）和 page（页码，从0开始）
      * @returns 包含 galleryids 和总数的 Promise
      */
     async getSingleTagSearchPage({ state, page, }) {
@@ -334,15 +334,14 @@ class HMAPIHandler {
      * @returns 画廊详情对象
      */
     async getGalleryDetail(gid) {
-        return await (0, hitomi_1.get_gallery_detail)(gid);
-    }
-    /**
-     * 获取图片文件的实际访问地址。
-     * @param files 图片文件数组
-     * @returns 图片地址数组
-     */
-    async getImageSrcs(files) {
-        return await (0, hitomi_1.get_image_srcs)(files);
+        const detail = await (0, hitomi_1.get_gallery_detail)(gid);
+        const thumbnail_src = (0, hitomi_1.get_thumbnail_url_from_hash)(detail.thumbnail_hash, true);
+        const file_thumbnail_srcs = await (0, hitomi_1.get_image_srcs)(detail.files);
+        return {
+            ...detail,
+            thumbnail_src,
+            file_thumbnail_srcs,
+        };
     }
     /**
      * 获取多个画廊的简要信息块。
@@ -350,7 +349,12 @@ class HMAPIHandler {
      * @returns 画廊信息块数组
      */
     async getGalleryblocks(gids) {
-        return await (0, hitomi_1.get_galleryblocks)(gids);
+        const blocks = await (0, hitomi_1.get_galleryblocks)(gids);
+        return blocks.map((block) => ({
+            ...block,
+            thumbnail_src: (0, hitomi_1.get_thumbnail_url_from_hash)(block.thumbnail_hashs[0], true),
+            thumbnail_srcs: block.thumbnail_hashs.map((hash) => (0, hitomi_1.get_thumbnail_url_from_hash)(hash, true)),
+        }));
     }
 }
 exports.HMAPIHandler = HMAPIHandler;

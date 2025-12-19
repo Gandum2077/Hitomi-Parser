@@ -1,5 +1,7 @@
 export type HMType = "doujinshi" | "manga" | "artistcg" | "gamecg" | "anime";
 
+export type HMNamespace = "artist" | "character" | "female" | "group" | "language" | "male" | "series" | "tag" | "type";
+
 export type HMGalleryBlockInfo = {
   gid: number;
   title: string;
@@ -13,6 +15,11 @@ export type HMGalleryBlockInfo = {
   thumbnail_hashs: string[];
   posted_time: Date;
 };
+
+export type HMGalleryBlockInfoWithThumbnail = {
+  thumbnail_src: string;
+  thumbnail_srcs: string[];
+} & HMGalleryBlockInfo;
 
 export type HMGalleryRawJson = {
   language_url: string | null;
@@ -99,6 +106,11 @@ export type HMGalleryDetail = {
   related_gids: number[];
 };
 
+export type HMGalleryDetailWithThumbnail = {
+  thumbnail_src: string;
+  file_thumbnail_srcs: string[];
+} & HMGalleryDetail;
+
 export type HMImage = {
   hash: string;
   name: string;
@@ -109,32 +121,34 @@ export type HMImage = {
   height: number;
 };
 
-export type HMState = {
-  area: "all" | "artist" | "character" | "group" | "series" | "tag" | "type";
-  tag: string; // 默认"index"
-  language: string; // 默认"all"
-  orderby: "date";
-  orderbykey: "added" | "published";
-  orderbydirection: "desc" | "asc" | "random";
-} | {
-  area: "all" | "artist" | "character" | "group" | "series" | "tag" | "type";
-  tag: string; // 默认"index"
-  language: string; // 默认"all"
-  orderby: "popular";
-  orderbykey: "today" | "week" | "month" | "year";
-  orderbydirection: "desc" | "asc" | "random";
-};
+export type HMState =
+  | {
+      area: "all" | "artist" | "character" | "group" | "series" | "tag" | "type";
+      tag: string; // 默认"index"
+      language: string; // 默认"all"
+      orderby: "date";
+      orderbykey: "added" | "published";
+      orderbydirection: "desc" | "asc" | "random";
+    }
+  | {
+      area: "all" | "artist" | "character" | "group" | "series" | "tag" | "type";
+      tag: string; // 默认"index"
+      language: string; // 默认"all"
+      orderby: "popular";
+      orderbykey: "today" | "week" | "month" | "year";
+      orderbydirection: "desc" | "asc" | "random";
+    };
 
-export type HMNamespace = "artist" | "character" | "female" | "group" | "language" | "male" | "series" | "tag" | "type";
-
-export type HMSearchOptions = {
-  term: string;
-  orderby: "date";
-  orderbykey: "added" | "published";
-  orderbydirection: "desc" | "asc" | "random";
-} | {
-  term: string;
-  orderby: "popular";
-  orderbykey: "today" | "week" | "month" | "year";
-  orderbydirection: "desc" | "asc" | "random";
-};
+export type HMSearchOptions =
+  | {
+      term: string;
+      orderby: "date";
+      orderbykey: "added" | "published";
+      orderbydirection: "desc" | "asc" | "random";
+    }
+  | {
+      term: string;
+      orderby: "popular";
+      orderbykey: "today" | "week" | "month" | "year";
+      orderbydirection: "desc" | "asc" | "random";
+    };

@@ -1,21 +1,12 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./src/parser"), exports);
-__exportStar(require("./src/api"), exports);
-__exportStar(require("./src/types"), exports);
-__exportStar(require("./src/error"), exports);
-__exportStar(require("./src/constant"), exports);
+exports.namespaces = exports.HMNetWorkError = exports.HMAPIError = exports.HMInvalidQueryError = exports.HMParseError = exports.HMAPIHandler = void 0;
+var api_1 = require("./src/api");
+Object.defineProperty(exports, "HMAPIHandler", { enumerable: true, get: function () { return api_1.HMAPIHandler; } });
+var error_1 = require("./src/error");
+Object.defineProperty(exports, "HMParseError", { enumerable: true, get: function () { return error_1.HMParseError; } });
+Object.defineProperty(exports, "HMInvalidQueryError", { enumerable: true, get: function () { return error_1.HMInvalidQueryError; } });
+Object.defineProperty(exports, "HMAPIError", { enumerable: true, get: function () { return error_1.HMAPIError; } });
+Object.defineProperty(exports, "HMNetWorkError", { enumerable: true, get: function () { return error_1.HMNetWorkError; } });
+var constant_1 = require("./src/constant");
+Object.defineProperty(exports, "namespaces", { enumerable: true, get: function () { return constant_1.namespaces; } });

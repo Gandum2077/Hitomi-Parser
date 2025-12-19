@@ -8,8 +8,18 @@ import {
   get_galleryblocks,
   get_gallery_detail,
   get_image_srcs,
+  get_thumbnail_url_from_hash,
 } from "./hitomi";
-import { HMGalleryBlockInfo, HMGalleryDetail, HMImage, HMNamespace, HMSearchOptions, HMState } from "./types";
+import {
+  HMGalleryBlockInfo,
+  HMGalleryBlockInfoWithThumbnail,
+  HMGalleryDetail,
+  HMGalleryDetailWithThumbnail,
+  HMImage,
+  HMNamespace,
+  HMSearchOptions,
+  HMState,
+} from "./types";
 
 /**
  * 求交集
@@ -75,7 +85,7 @@ export class HMAPIHandler {
    * @returns 解析后的标签对象，包括 positive_terms、negative_terms、or_terms
    * @throws {HMInvalidQueryError} 当标签格式不合法时抛出此错误
    */
-  parseQuery(query: string): ParsedTerms {
+  private parseQuery(query: string): ParsedTerms {
     const positive_terms: { namespace?: HMNamespace; value: string }[] = [];
     const negative_terms: { namespace?: HMNamespace; value: string }[] = [];
     let or_terms: { namespace?: HMNamespace; value: string }[][] = [[]];
@@ -157,7 +167,7 @@ export class HMAPIHandler {
 
   /**
    * 获取单一标签的搜索结果分页。
-   * @param params 包含 state（搜索状态）和 page（页码）
+   * @param params 包含 state（搜索状态）和 page（页码，从0开始）
    * @returns 包含 galleryids 和总数的 Promise
    */
   async getSingleTagSearchPage({
@@ -378,17 +388,15 @@ export class HMAPIHandler {
    * @param gid 画廊ID
    * @returns 画廊详情对象
    */
-  async getGalleryDetail(gid: number): Promise<HMGalleryDetail> {
-    return await get_gallery_detail(gid);
-  }
-
-  /**
-   * 获取图片文件的实际访问地址。
-   * @param files 图片文件数组
-   * @returns 图片地址数组
-   */
-  async getImageSrcs(files: HMImage[]): Promise<string[]> {
-    return await get_image_srcs(files);
+  async getGalleryDetail(gid: number): Promise<HMGalleryDetailWithThumbnail> {
+    const detail = await get_gallery_detail(gid);
+    const thumbnail_src = get_thumbnail_url_from_hash(detail.thumbnail_hash, true);
+    const file_thumbnail_srcs = await get_image_srcs(detail.files);
+    return {
+      ...detail,
+      thumbnail_src,
+      file_thumbnail_srcs,
+    };
   }
 
   /**
@@ -396,7 +404,12 @@ export class HMAPIHandler {
    * @param gids 画廊ID数组
    * @returns 画廊信息块数组
    */
-  async getGalleryblocks(gids: number[]): Promise<HMGalleryBlockInfo[]> {
-    return await get_galleryblocks(gids);
+  async getGalleryblocks(gids: number[]): Promise<HMGalleryBlockInfoWithThumbnail[]> {
+    const blocks = await get_galleryblocks(gids);
+    return blocks.map((block) => ({
+      ...block,
+      thumbnail_src: get_thumbnail_url_from_hash(block.thumbnail_hashs[0], true),
+      thumbnail_srcs: block.thumbnail_hashs.map((hash) => get_thumbnail_url_from_hash(hash, true)),
+    }));
   }
 }
