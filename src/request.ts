@@ -1,4 +1,4 @@
-import { HMNetWorkError } from "./error";
+import { HMNetWorkError, HMTimeoutError } from "./error";
 
 enum ENV {
   NODE = 0,
@@ -87,4 +87,42 @@ export async function fakeFetch(url: string, init?: RequestInit): Promise<Respon
   } else {
     throw new Error("环境不支持");
   }
+}
+
+// 定义一个有timeout的下载函数，通过Promise.race实现
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
+  const timeoutPromise = new Promise<T>((_, reject) =>
+    setTimeout(() => reject(new HMTimeoutError("Timeout error on download")), timeoutMs)
+  );
+  return Promise.race([promise, timeoutPromise]);
+}
+
+async function _download(url: string, header: Record<string, any>) {
+  const resp = await $http.download({ url, header, showsProgress: false });
+  if (resp.error) {
+    if (resp.error.code === -1001) {
+      // HttpTypes.NSURLErrorDomain.NSURLErrorTimedOut
+      throw new HMTimeoutError(`Timeout Error! url: ${url}`);
+    } else if (!resp.response || !resp.response.statusCode) {
+      throw new HMNetWorkError(resp.error.code, `Network Error! \nurl: ${url}\nheader: ${JSON.stringify(header)}`);
+    }
+  }
+  const statusCode = resp.response.statusCode;
+  if (statusCode >= 400) {
+    throw new HMNetWorkError(statusCode, `HTTP error! status: ${statusCode}\nurl: ${url}`);
+  }
+  return resp;
+}
+
+export async function downloadWithTimeout({
+  url,
+  header,
+  timeout,
+}: {
+  url: string;
+  header: Record<string, any>;
+  timeout: number;
+}) {
+  const resp = await withTimeout(_download(url, header), timeout * 1000);
+  return resp;
 }

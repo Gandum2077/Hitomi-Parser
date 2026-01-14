@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fakeFetch = void 0;
+exports.downloadWithTimeout = exports.fakeFetch = void 0;
 const error_1 = require("./error");
 var ENV;
 (function (ENV) {
@@ -83,3 +83,30 @@ async function fakeFetch(url, init) {
     }
 }
 exports.fakeFetch = fakeFetch;
+// 定义一个有timeout的下载函数，通过Promise.race实现
+function withTimeout(promise, timeoutMs) {
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new error_1.HMTimeoutError("Timeout error on download")), timeoutMs));
+    return Promise.race([promise, timeoutPromise]);
+}
+async function _download(url, header) {
+    const resp = await $http.download({ url, header, showsProgress: false });
+    if (resp.error) {
+        if (resp.error.code === -1001) {
+            // HttpTypes.NSURLErrorDomain.NSURLErrorTimedOut
+            throw new error_1.HMTimeoutError(`Timeout Error! url: ${url}`);
+        }
+        else if (!resp.response || !resp.response.statusCode) {
+            throw new error_1.HMNetWorkError(resp.error.code, `Network Error! \nurl: ${url}\nheader: ${JSON.stringify(header)}`);
+        }
+    }
+    const statusCode = resp.response.statusCode;
+    if (statusCode >= 400) {
+        throw new error_1.HMNetWorkError(statusCode, `HTTP error! status: ${statusCode}\nurl: ${url}`);
+    }
+    return resp;
+}
+async function downloadWithTimeout({ url, header, timeout, }) {
+    const resp = await withTimeout(_download(url, header), timeout * 1000);
+    return resp;
+}
+exports.downloadWithTimeout = downloadWithTimeout;

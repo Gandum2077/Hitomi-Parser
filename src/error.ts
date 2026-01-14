@@ -7,6 +7,17 @@ interface AppError {
   statusCode?: number;
 }
 
+export class HMTimeoutError extends Error implements AppError {
+  name = "HMTimeoutError";
+  message = "请求超时";
+  detail?: string;
+
+  constructor(detail?: string) {
+    super();
+    this.detail = detail;
+  }
+}
+
 export class HMParseError extends Error implements AppError {
   name = "HMParseError";
 

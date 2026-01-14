@@ -1,5 +1,5 @@
 import { namespaces } from "./constant";
-import { HMInvalidQueryError } from "./error";
+import { HMInvalidQueryError, HMNetWorkError } from "./error";
 import {
   get_galleryids_for_query_without_namespace,
   get_galleryids_from_state,
@@ -10,6 +10,7 @@ import {
   get_image_srcs,
   get_thumbnail_url_from_hash,
 } from "./hitomi";
+import { downloadWithTimeout } from "./request";
 import {
   HMGalleryBlockInfo,
   HMGalleryBlockInfoWithThumbnail,
@@ -20,6 +21,8 @@ import {
   HMSearchOptions,
   HMState,
 } from "./types";
+
+const refererUrl = "https://hitomi.la/";
 
 /**
  * 求交集
@@ -411,5 +414,11 @@ export class HMAPIHandler {
       thumbnail_src: get_thumbnail_url_from_hash(block.thumbnail_hashs[0], true),
       thumbnail_srcs: block.thumbnail_hashs.map((hash) => get_thumbnail_url_from_hash(hash, true)),
     }));
+  }
+
+  async downloadImage(url: string): Promise<NSData> {
+    const header = { referer: refererUrl };
+    const resp = await downloadWithTimeout({ url, header, timeout: 30 });
+    return resp.data;
   }
 }

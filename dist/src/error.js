@@ -1,6 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HMNetWorkError = exports.HMAPIError = exports.HMInvalidQueryError = exports.HMParseError = void 0;
+exports.HMNetWorkError = exports.HMAPIError = exports.HMInvalidQueryError = exports.HMParseError = exports.HMTimeoutError = void 0;
+class HMTimeoutError extends Error {
+    constructor(detail) {
+        super();
+        this.name = "HMTimeoutError";
+        this.message = "请求超时";
+        this.detail = detail;
+    }
+}
+exports.HMTimeoutError = HMTimeoutError;
 class HMParseError extends Error {
     constructor(message) {
         super(message);

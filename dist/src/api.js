@@ -4,6 +4,8 @@ exports.HMAPIHandler = void 0;
 const constant_1 = require("./constant");
 const error_1 = require("./error");
 const hitomi_1 = require("./hitomi");
+const request_1 = require("./request");
+const refererUrl = "https://hitomi.la/";
 /**
  * 求交集
  * @param arrays
@@ -355,6 +357,11 @@ class HMAPIHandler {
             thumbnail_src: (0, hitomi_1.get_thumbnail_url_from_hash)(block.thumbnail_hashs[0], true),
             thumbnail_srcs: block.thumbnail_hashs.map((hash) => (0, hitomi_1.get_thumbnail_url_from_hash)(hash, true)),
         }));
+    }
+    async downloadImage(url) {
+        const header = { referer: refererUrl };
+        const resp = await (0, request_1.downloadWithTimeout)({ url, header, timeout: 30 });
+        return resp.data;
     }
 }
 exports.HMAPIHandler = HMAPIHandler;
