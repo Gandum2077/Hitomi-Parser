@@ -2,8 +2,8 @@ export { HMAPIHandler } from "./src/api";
 export {
   HMType,
   HMNamespace,
-  HMGalleryBlockInfoWithThumbnail,
-  HMGalleryDetailWithThumbnail,
+  HMGalleryBlockInfoWithThumbnailSrc,
+  HMGalleryDetailWithSrcs,
   HMState,
   HMSearchOptions,
 } from "./src/types";

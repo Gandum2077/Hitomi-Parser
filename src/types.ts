@@ -16,9 +16,8 @@ export type HMGalleryBlockInfo = {
   posted_time: Date;
 };
 
-export type HMGalleryBlockInfoWithThumbnail = {
+export type HMGalleryBlockInfoWithThumbnailSrc = {
   thumbnail_src: string;
-  thumbnail_srcs: string[];
 } & HMGalleryBlockInfo;
 
 export type HMGalleryRawJson = {
@@ -106,9 +105,9 @@ export type HMGalleryDetail = {
   related_gids: number[];
 };
 
-export type HMGalleryDetailWithThumbnail = {
+export type HMGalleryDetailWithSrcs = {
   thumbnail_src: string;
-  file_thumbnail_srcs: string[];
+  file_srcs: {image: string, thumbnail: string}[];
 } & HMGalleryDetail;
 
 export type HMImage = {

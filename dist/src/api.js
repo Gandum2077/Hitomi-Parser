@@ -338,11 +338,17 @@ class HMAPIHandler {
     async getGalleryDetail(gid) {
         const detail = await (0, hitomi_1.get_gallery_detail)(gid);
         const thumbnail_src = (0, hitomi_1.get_thumbnail_url_from_hash)(detail.thumbnail_hash, true);
-        const file_thumbnail_srcs = await (0, hitomi_1.get_image_srcs)(detail.files);
+        const file_image_srcs = await (0, hitomi_1.get_image_srcs)(detail.files);
+        const file_thumbnail_srcs = detail.files.map((file) => (0, hitomi_1.get_thumbnail_url_from_hash)(file.hash, false));
+        // 组合图片和缩略图链接
+        const file_srcs = file_image_srcs.map((imageSrc, index) => ({
+            image: imageSrc,
+            thumbnail: file_thumbnail_srcs[index],
+        }));
         return {
             ...detail,
             thumbnail_src,
-            file_thumbnail_srcs,
+            file_srcs,
         };
     }
     /**
@@ -355,7 +361,6 @@ class HMAPIHandler {
         return blocks.map((block) => ({
             ...block,
             thumbnail_src: (0, hitomi_1.get_thumbnail_url_from_hash)(block.thumbnail_hashs[0], true),
-            thumbnail_srcs: block.thumbnail_hashs.map((hash) => (0, hitomi_1.get_thumbnail_url_from_hash)(hash, true)),
         }));
     }
     async downloadImage(url) {
