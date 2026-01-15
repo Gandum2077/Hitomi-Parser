@@ -1,6 +1,5 @@
-import { get } from "jquery";
 import { namespaces } from "./constant";
-import { HMInvalidQueryError, HMNetWorkError } from "./error";
+import { HMInvalidQueryError } from "./error";
 import {
   get_galleryids_for_query_without_namespace,
   get_galleryids_from_state,
@@ -13,10 +12,8 @@ import {
 } from "./hitomi";
 import { downloadWithTimeout } from "./request";
 import {
-  HMGalleryBlockInfo,
   HMGalleryBlockInfoWithThumbnailSrc,
-  HMGalleryDetail,
-  HMGalleryDetailWithSrcs,
+  HMGalleryDetailWithThumbnailSrcs,
   HMImage,
   HMNamespace,
   HMSearchOptions,
@@ -392,21 +389,20 @@ export class HMAPIHandler {
    * @param gid 画廊ID
    * @returns 画廊详情对象
    */
-  async getGalleryDetail(gid: number): Promise<HMGalleryDetailWithSrcs> {
+  async getGalleryDetail(gid: number): Promise<HMGalleryDetailWithThumbnailSrcs> {
     const detail = await get_gallery_detail(gid);
     const thumbnail_src = get_thumbnail_url_from_hash(detail.thumbnail_hash, true);
-    const file_image_srcs = await get_image_srcs(detail.files);
     const file_thumbnail_srcs = detail.files.map((file) => get_thumbnail_url_from_hash(file.hash, false));
-    // 组合图片和缩略图链接
-    const file_srcs = file_image_srcs.map((imageSrc, index) => ({
-      image: imageSrc,
-      thumbnail: file_thumbnail_srcs[index],
-    }));
     return {
       ...detail,
       thumbnail_src,
-      file_srcs,
+      file_thumbnail_srcs,
     };
+  }
+
+  async getImageSrcs(files: HMImage[]): Promise<string[]> {
+    const srcs = await get_image_srcs(files);
+    return srcs;
   }
 
   /**

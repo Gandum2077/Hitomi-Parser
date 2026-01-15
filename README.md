@@ -39,6 +39,12 @@ const isSingle = api.isSingleTag("artist:someone");
 // 获取画廊详情
 const detail = await api.getGalleryDetail(123456);
 
+// 画廊详情中是不包含图片链接的，因为该数据会随时间变化，需单独请求
+const imageSrcs = await api.getImageSrcs(detail.files);
+
+// 下载图片（仅用于JSBox环境）
+const imageData = await api.downloadImage(imageSrcs[0]);
+
 ```
 
 ## API
@@ -57,6 +63,8 @@ const detail = await api.getGalleryDetail(123456);
   - 组合/多标签查询: `{ type: 'all', count, gids }`
 - **`getGalleryblocks(gids: number[])`**: 批量获取简要画廊信息块（适合在列表界面显示）。
 - **`getGalleryDetail(gid: number)`**: 获取画廊详情（元数据与文件数组）。
+- **`getImageSrcs(files: HMGalleryFile[])`**: 根据画廊文件数组获取对应的图片链接列表。
+- **`downloadImage(url: string)`**: （仅JSBox环境）下载图片并返回二进制数据。
 
 ## term规则
 

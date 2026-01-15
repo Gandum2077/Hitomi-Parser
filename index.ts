@@ -3,7 +3,7 @@ export {
   HMType,
   HMNamespace,
   HMGalleryBlockInfoWithThumbnailSrc,
-  HMGalleryDetailWithSrcs,
+  HMGalleryDetailWithThumbnailSrcs,
   HMState,
   HMSearchOptions,
 } from "./src/types";

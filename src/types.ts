@@ -105,9 +105,9 @@ export type HMGalleryDetail = {
   related_gids: number[];
 };
 
-export type HMGalleryDetailWithSrcs = {
+export type HMGalleryDetailWithThumbnailSrcs = {
   thumbnail_src: string;
-  file_srcs: {image: string, thumbnail: string}[];
+  file_thumbnail_srcs: string[];
 } & HMGalleryDetail;
 
 export type HMImage = {
