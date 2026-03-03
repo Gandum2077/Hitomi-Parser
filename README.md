@@ -44,7 +44,6 @@ const imageSrcs = await api.getImageSrcs(detail.files);
 
 // 下载图片（仅用于JSBox环境）
 const imageData = await api.downloadImage(imageSrcs[0]);
-
 ```
 
 ## API
@@ -61,6 +60,7 @@ const imageData = await api.downloadImage(imageSrcs[0]);
   返回值为两种结构之一：
   - 单标签快速查询: `{ type: 'single', state, count, gids }`
   - 组合/多标签查询: `{ type: 'all', count, gids }`
+
 - **`getGalleryblocks(gids: number[])`**: 批量获取简要画廊信息块（适合在列表界面显示）。
 - **`getGalleryDetail(gid: number)`**: 获取画廊详情（元数据与文件数组）。
 - **`getImageSrcs(files: HMGalleryFile[])`**: 根据画廊文件数组获取对应的图片链接列表。
@@ -72,4 +72,3 @@ const imageData = await api.downloadImage(imageSrcs[0]);
 - 不能使用`orderby`, `orderbykey`, `orderbydirection`三个命名空间，而是要在options中指定。
 - 同一个标签中使用`_`表示空格，如 `female:chinese_dress`。
 - 查询字符串中以 `-` 开头的标签表示排除，`or` 用于将多个标签视为“或”关系。
-

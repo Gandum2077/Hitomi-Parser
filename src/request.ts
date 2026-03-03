@@ -92,7 +92,7 @@ export async function fakeFetch(url: string, init?: RequestInit): Promise<Respon
 // 定义一个有timeout的下载函数，通过Promise.race实现
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
   const timeoutPromise = new Promise<T>((_, reject) =>
-    setTimeout(() => reject(new HMTimeoutError("Timeout error on download")), timeoutMs)
+    setTimeout(() => reject(new HMTimeoutError("Timeout error on download")), timeoutMs),
   );
   return Promise.race([promise, timeoutPromise]);
 }

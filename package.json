@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "tsc && node dist/src/test.js"
+    "test": "tsc && node dist/src/test.js",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "@types/jquery": "^3.5.32",
     "@types/url-parse": "^1.4.11",
     "browserify": "^17.0.0",
-    "jsbox-types": "^1.0.44"
+    "jsbox-types": "^2.0.0",
+    "prettier": "^3.8.1"
   }
 }

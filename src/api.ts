@@ -374,8 +374,8 @@ export class HMAPIHandler {
         options.orderbydirection === "random"
           ? shuffleArray(gids)
           : options.orderbydirection === "asc"
-          ? gids.toReversed()
-          : gids;
+            ? gids.toReversed()
+            : gids;
       return {
         type: "all",
         gids: rgids,

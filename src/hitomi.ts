@@ -452,7 +452,7 @@ export async function get_image_srcs(files: HMImage[]) {
   const url_from_url = (url: string, base?: string, dir?: string) => {
     return url.replace(
       /\/\/..?\.(?:gold-usergeneratedcontent\.net|hitomi\.la)\//,
-      "//" + subdomain_from_url(url, base, dir) + "." + domain2 + "/"
+      "//" + subdomain_from_url(url, base, dir) + "." + domain2 + "/",
     );
   };
 
@@ -460,7 +460,7 @@ export async function get_image_srcs(files: HMImage[]) {
     if ("tn" === base) {
       return url_from_url(
         "https://a." + domain2 + "/" + dir + "/" + real_full_path_from_hash(image.hash) + "." + ext,
-        base
+        base,
       );
     }
     return url_from_url(url_from_hash(galleryid, image, dir, ext), base, dir);
